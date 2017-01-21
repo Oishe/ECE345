@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <vector>
 
 
@@ -22,37 +23,25 @@ struct Submission{
   string  username;
 };
 
-Submission lineToObject(const string line){
+Submission lineToObject( string line){
   //Fill Submission struct from one line from CSV
   Submission newSubmission;
+  //replace all ',' with ' ' for easy stringstream capture
+  replace(line.begin(), line.end(), ',', ' ');
   //caputre full line to a stringstream
   istringstream ss(line);
-  //seperate string and int tokens
-  string s_token;
-  int i_token;
   //store values into the structure
-  getline(ss, i_token, ',');
-  newSubmission.votes = i_token;
-  getline(ss, i_token, ',');
-  newSubmission.unixtime = i_token;
-  getline(ss, s_token, ',');
-  newSubmission.rawtime = s_token;
-  getline(ss, s_token, ',');
-  newSubmission.reddit_id = s_token;
-  getline(ss, i_token, ',');
-  newSubmission.upvotes = i_token;
-  getline(ss, s_token, ',');
-  newSubmission.subreddit = s_token;
-  getline(ss, i_token, ',');
-  newSubmission.downvotes = i_token;
-  getline(ss, i_token, ',');
-  newSubmission.local_time = i_token;
-  getline(ss, i_token, ',');
-  newSubmission.score = i_token;
-  getline(ss, i_token, ',');
-  newSubmission.number_comments = i_token;
-  getline(ss, s_token, ',');
-  newSubmission.username = s_token;
+  ss >> newSubmission.votes;
+  ss >> newSubmission.unixtime;
+  ss >> newSubmission.rawtime;
+  ss >> newSubmission.reddit_id;
+  ss >> newSubmission.upvotes;
+  ss >> newSubmission.subreddit;
+  ss >> newSubmission.downvotes;
+  ss >> newSubmission.local_time;
+  ss >> newSubmission.score;
+  ss >> newSubmission.number_comments;
+  ss >> newSubmission.username;
   return newSubmission;
 }
 
@@ -68,15 +57,30 @@ vector<Submission> createSubmissionVector(ifstream& csvfile)
   return array;
 }
 
+void printArrayAsCSV(vector<Submission> array){
+  for (int i=0; i<array.size(); i++){
+    cout << array[i].votes << ",";
+    cout << array[i].unixtime << ",";
+    cout << array[i].rawtime << ",";
+    cout << array[i].reddit_id << ",";
+    cout << array[i].upvotes << ",";
+    cout << array[i].subreddit << ",";
+    cout << array[i].downvotes << ",";
+    cout << array[i].local_time << ",";
+    cout << array[i].score << ",";
+    cout << array[i].number_comments << ",";
+    cout << array[i].username << endl;
+  }
+}
+
 int main(int argc, char const *argv[]) {
   //Open input file produced by command line argument
   ifstream csvfile;
   csvfile.open(argv[1], ifstream::in);
-  //Initialized a vector of structs
+  //Initialize a vector of structs
   //and parse through lines to fill it
   vector<Submission> array = createSubmissionVector(csvfile);
-  int num_entries = array.size();
-  //sorting
+  printArrayAsCSV(array);
   csvfile.close();
   return 0;
 }
