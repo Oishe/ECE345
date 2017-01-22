@@ -1,10 +1,15 @@
+// Name: Oishe Farhan
+// Date 17-01-2017
+// Title: quicksort
+
+#include <stdio.h>
+#include <time.h>
 #include <sstream>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
-
 
 using namespace std;
 
@@ -23,7 +28,7 @@ struct Submission{
   string  username;
 };
 
-void printArrayAsCSV(vector<Submission> array){
+void printArrayAsCSV(vector<Submission>& array){
   for (int i=0; i<array.size(); i++){
     cout << array[i].votes << ",";
     cout << array[i].unixtime << ",";
@@ -76,10 +81,46 @@ vector<Submission> parser(char const *filename[]){
   return array;
 }
 
+void arraySubmissionSwap(vector<Submission>& array, int index1, int index2){
+  Submission temp = array[index1];
+  array[index1] = array[index2];
+  array[index2] = temp;
+}
+
+int partition (vector<Submission>& array, int L, int R){
+  Submission * pivot = &array[R];
+  int i = L-1;
+  for(int j=L; j<R; j++){
+    if(array[j].votes <= pivot->votes){
+      i++;
+      arraySubmissionSwap(array, i, j);
+    }
+  }
+  i++;
+  arraySubmissionSwap(array, i, R);
+  return i;
+}
+
+void quicksort(vector<Submission>& array, int L, int R){
+  //quicksort recursive method
+  //P=pivot L=left R=right
+  if (L<R){
+    int P = partition(array,L,R);
+    quicksort(array,L,P-1);
+    quicksort(array,P+1,R);
+  }
+
+}
+
+
 int main(int argc, char const *argv[]) {
   //Initialize a vector of structs
   //and parse through lines to fill it
   vector<Submission> array = parser(argv);
+  cout << "unsorted:"<<endl;
+  printArrayAsCSV(array);
+  quicksort(array, 0, array.size()-1);
+  cout << "sorted:"<<endl;
   printArrayAsCSV(array);
   return 0;
 }
