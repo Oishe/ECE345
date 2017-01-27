@@ -108,7 +108,7 @@ int main(int argc, char const *argv[]) {
   timestamp_t t1 = get_timestamp();
   double secs = (t1 - t0) / 1000000.0L;
   // cout << "sorted:"<<endl;
-  // printArrayAsCSV(array);
-  cout << "quicksort time:" << secs<< endl;
+  printArrayAsCSV(array);
+  // cout << "quicksort time:" << secs<< endl;
   return 0;
 }
